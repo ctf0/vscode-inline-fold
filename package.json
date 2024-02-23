@@ -1,17 +1,12 @@
 {
-	"name": "inline-fold",
-	"displayName": "Inline fold",
+	"name": "inline-fold-new",
+	"displayName": "Inline fold (new)",
 	"description": "A custom decorator that \"fold\" matching content in single line",
 	"icon": "res/icon.png",
-	"version": "0.2.6",
-	"publisher": "moalamri",
-	"homepage": "https://github.com/moalamri/vscode-inline-fold",
-	"bugs": "https://github.com/moalamri/vscode-inline-fold/issues",
+	"version": "0.0.1",
+	"publisher": "ctf0",
 	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/moalamri/vscode-inline-fold"
-	},
+	"repository": "https://github.com/ctf0/vscode-inline-fold",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -22,7 +17,7 @@
 	"activationEvents": [
 		"onStartupFinished"
 	],
-	"main": "./out/extension.js",
+	"main": "./out/main",
 	"contributes": {
 		"commands": [
 			{
@@ -38,7 +33,7 @@
 			"type": "object",
 			"title": "Inline Fold",
 			"properties": {
-				"inlineFold.autoFold": {
+				"inlineFold.autoFoldOnOpen": {
 					"type": "boolean",
 					"scope": "language-overridable",
 					"description": "Set the default state of inline fold when opening a file",
@@ -105,7 +100,10 @@
 					]
 				},
 				"inlineFold.regexGroup": {
-					"type": ["string", "number"],
+					"type": [
+						"string",
+						"number"
+					],
 					"scope": "language-overridable",
 					"description": "Regex capture group number for content that will be folded",
 					"default": "6",
@@ -129,14 +127,14 @@
 						"⌨"
 					]
 				},
-				"inlineFold.maskColor": {
+				"inlineFold.maskCss": {
 					"type": "string",
 					"scope": "language-overridable",
-					"description": "The color of the covering mask in hex",
-					"default": "#68D7AC",
+					"description": "The css of the covering mask",
+					"default": "color:#68D7AC",
 					"examples": [
-						"#68D7AC",
-						"#FF0000"
+						"color:#68D7AC",
+						"color:#000;background:#ffffff30;padding:4px;border-radius:4px;"
 					]
 				},
 				"inlineFold.unfoldedOpacity": {
@@ -161,7 +159,7 @@
 				"inlineFold.after": {
 					"type": "string",
 					"scope": "language-overridable",
-					"description": "(Optional) Add any text/character to be appended to the folded text",
+					"description": "Add any text/character to be appended to the folded text",
 					"default": "",
 					"examples": [
 						"+",
@@ -172,13 +170,13 @@
 				"inlineFold.unfoldOnLineSelect": {
 					"type": "boolean",
 					"scope": "language-overridable",
-					"description": "(Optional) unfold the line when any part of the line is selected",
+					"description": "unfold the line when any part of the line is selected",
 					"default": false
 				},
 				"inlineFold.disableInDiffEditor": {
 					"type": "boolean",
 					"scope": "language-overridable",
-					"description": "(Optional) disable fold in diff editor",
+					"description": "disable fold in diff editor",
 					"default": false
 				}
 			},
@@ -192,25 +190,16 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "pnpm run compile",
-		"package": "vsce package",
-		"publish": "vsce publish",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./"
+		"vscode:prepublish": "npm run esbuild-base -- --pure:console.log --minify",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap",
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+		"watch": "npm run esbuild"
 	},
 	"devDependencies": {
 		"@types/vscode": "1.74.0",
-		"@types/node": "^18.11.18",
-		"typescript": "4.9.4"
-	},
-	"__metadata": {
-		"id": "4dc4b505-dda3-4ac6-b839-397f8cf0adcc",
-		"publisherDisplayName": "Mohammed Alamri",
-		"publisherId": "41376028-10e6-4784-aff4-9c6be1c5c66e",
-		"isPreReleaseVersion": false,
-		"targetPlatform": "undefined",
-		"updated": true,
-		"preRelease": false,
-		"installedTimestamp": 1657117103571
+		"@types/node": "^20.11.20",
+		"typescript": "5.3.3",
+		"esbuild": "^0.20.1"
 	}
 }
