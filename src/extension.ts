@@ -1,4 +1,4 @@
-import { ExtensionContext, TextDocument, WorkspaceConfiguration, commands, window, workspace } from 'vscode';
+import { ExtensionContext, WorkspaceConfiguration, commands, window, workspace } from 'vscode';
 import { Cache } from './cache';
 import { Decorator } from './decorator';
 import { Commands, Settings } from './enums';
@@ -60,18 +60,6 @@ export function activate(context: ExtensionContext) {
         }
     });
 
-    const onWillSave = workspace.onWillSaveTextDocument(async (e) => {
-        if (e.document !== window.activeTextEditor?.document) return;
-
-        await commands.executeCommand(Commands.InlineFoldToggle);
-    });
-
-    const onDidSave = workspace.onDidSaveTextDocument(async (doc: TextDocument) => {
-        if (doc !== window.activeTextEditor?.document) return;
-
-        await commands.executeCommand(Commands.InlineFoldToggle);
-    });
-
     // Add to a list of disposables to the editor context
     // which are disposed when this extension is deactivated.
     context.subscriptions.push(
@@ -82,8 +70,6 @@ export function activate(context: ExtensionContext) {
         clearCacheCommand,
         changeVisibleRange,
         changeConfiguration,
-        onWillSave,
-        onDidSave,
     );
 }
 
